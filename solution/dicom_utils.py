@@ -3,6 +3,7 @@ from dicom.errors import InvalidDicomError
 import numpy as np
 from PIL import Image, ImageDraw
 
+
 def parse_dicom_file(filename):
     """Parse the given DICOM filename
 
@@ -102,8 +103,12 @@ def get_patient_files(patient_dicom_id, patient_contour_id,
     o_contours_valid = [str(o) for o in o_contours if o.name[0] != '.']
 
     if verbose:
-        print(f"# of dicoms : {len(dicoms)}, i_contours : {len(i_contours)}, o_contours : {len(o_contours)}")
-        print(f"# of valid dicoms : {len(dicoms_valid)}, i_contours : {len(i_contours_valid)}, \
+        print(f"# of dicoms : {len(dicoms)}\
+i_contours : {len(i_contours)},\
+o_contours : {len(o_contours)}")
+
+        print(f"# of valid dicoms : {len(dicoms_valid)},\
+i_contours :{len(i_contours_valid)},\
 o_contours : {len(o_contours_valid)}")
 
     return (dicoms_valid, i_contours_valid, o_contours_valid)
@@ -147,7 +152,8 @@ def patient_files_dict(dicoms_dict, i_contours_dict, o_contours_dict):
         i_contours_dict (dict): ordered dict of i_contour files
         o_contours_dict (dict): ordered dict of o_contour files
     Return:
-        patient_files_dict (dict): ordered dict with same size as original dicom images containing
+        patient_files_dict (dict): ordered dict with same size as
+        original dicom images containing
         list for [dicom file path, i_contour file path, o_contour file path]
     """
     patient_files_dict = {}
@@ -164,7 +170,8 @@ def patient_files_dict(dicoms_dict, i_contours_dict, o_contours_dict):
 class Patient:
     def __init__(self, dicom_id, contour_id, dicoms_path, contourfiles_path):
         """
-        Class object for patients
+        Class object for patients. This our main class for accesing or creating
+        data for a patient.
 
         dicom_id (str): patient directory name under a dir like "dicoms/"
         contour_id (str): patient directory name under dir like "contourfiles/"
@@ -181,23 +188,25 @@ class Patient:
         """
         Creates lists for dicom, i_contour and o_contour files
         """
-        self.dicoms, self.i_contours, self.o_contours = get_patient_files(self.dicom_id, self.contour_id,
-                                                                          self.dicoms_path, self.contourfiles_path,
-                                                                          verbose)
+        self.dicoms, self.i_contours, self.o_contours =\
+            get_patient_files(self.dicom_id, self.contour_id,
+                              self.dicoms_path, self.contourfiles_path,
+                              verbose)
 
     def create_file_dicts(self, verbose=True):
         """
-        Create ordered dicts for dicoms, i_contours, o_contours filenames and all files combined
+        Create ordered dicts for dicoms, i_contours, o_contours
+        filenames and all files combined
         """
         if not hasattr(self, 'dicoms'):
             self.create_file_lists(verbose)
 
-        # pdb.set_trace()
-
         self.dicoms_dict = dicom_slice_dict(self.dicoms)
         self.i_contours_dict = contour_slice_dict(self.i_contours)
         self.o_contours_dict = contour_slice_dict(self.o_contours)
-        self.all_files_dict = patient_files_dict(self.dicoms_dict, self.i_contours_dict, self.o_contours_dict)
+        self.all_files_dict = patient_files_dict(self.dicoms_dict,
+                                                 self.i_contours_dict,
+                                                 self.o_contours_dict)
 
     def create_numpy_arrays(self, verbose=True):
         """
@@ -221,19 +230,17 @@ class Patient:
 
             if img_array is not None:
                 # get image size
-                H, W = img_array.shape
+                h, w = img_array.shape
 
                 # parse i_contour
                 if i_contour_fn is not None:
-                    i_contour_array = poly_to_mask(parse_contour_file(i_contour_fn)
-                                                   , W, H).astype(np.uint8)
+                    i_contour_array = poly_to_mask(parse_contour_file(i_contour_fn), w, h).astype(np.uint8)
                 else:
                     i_contour_array = None
 
                 # parse o_contour
                 if o_contour_fn is not None:
-                    o_contour_array = poly_to_mask(parse_contour_file(o_contour_fn)
-                                                   , W, H).astype(np.uint8)
+                    o_contour_array = poly_to_mask(parse_contour_file(o_contour_fn), w, h).astype(np.uint8)
                 else:
                     o_contour_array = None
             else:

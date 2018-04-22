@@ -3,7 +3,8 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 
-def show_img_msk_fromarray(img_arr, msk_arr, alpha=0.35, sz=7, cmap='inferno', save_path=None):
+def show_img_msk_fromarray(img_arr, msk_arr, alpha=0.35, sz=7, cmap='inferno',
+                           save_path=None):
 
     """
     Show original image and masked on top of image
@@ -31,7 +32,8 @@ def show_img_msk_fromarray(img_arr, msk_arr, alpha=0.35, sz=7, cmap='inferno', s
         plt.close()
 
 
-def save_images(all_patients, contour_type='i_contour', main_dir='final_data/images/'):
+def save_images(all_patients, contour_type='i_contour',
+                main_dir='final_data/images/'):
     """
     Save dicom images and images with masks on top of the corresponding images.
     All files will will be saved under main_dir by creating a new folder
@@ -60,6 +62,12 @@ def save_images(all_patients, contour_type='i_contour', main_dir='final_data/ima
 
             # only show image for given contour type
             if slice_dict[f'{contour_type}_array'] is not None:
-                img_array, msk_array = slice_dict['dicom_array'], slice_dict[f'{contour_type}_array']
-                show_img_msk_fromarray(img_array, msk_array, cmap='Wistia', sz=10, alpha=0.7,
-                                       save_path=dirname + f'slice_{slice_no}.png')
+
+                img_array = slice_dict['dicom_array']
+                msk_array = slice_dict[f'{contour_type}_array']
+
+                show_img_msk_fromarray(img_array,
+                                       msk_array,
+                                       cmap='Wistia',
+                                       sz=10, alpha=0.7,
+                                       save_path=dirname +f'slice_{slice_no}.png')

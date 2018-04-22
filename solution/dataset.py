@@ -1,7 +1,8 @@
 import numpy as np
-from torch.utils.data import *
-from torch import FloatTensor as FT
+from torch.utils.data import Dataset
+from torch import FloatTensor
 from .dicom_utils import parse_dicom_file, poly_to_mask, parse_contour_file
+
 
 class HeartDataset2D(Dataset):
     """
@@ -35,12 +36,13 @@ class HeartDataset2D(Dataset):
         dicom_contour_fname = self.dicom_contour_fnames[idx]
         dicom_fname, contour_fname = dicom_contour_fname[0], dicom_contour_fname[1]
 
-        #
+        # parse image and mask files
         img = parse_dicom_file(dicom_fname)
-        H, W = img.shape
-        msk = poly_to_mask(parse_contour_file(contour_fname), W, H).astype(np.uint8)
+        h, w = img.shape
+        msk = poly_to_mask(parse_contour_file(contour_fname), w, h).astype(np.uint8)
 
-        return FT(img)[None, :], FT(msk)[None, :] # convert to FloatTensor and add channel (1)
+        # convert to FloatTensor and add channel (1)
+        return FloatTensor(img)[None, :], FloatTensor(msk)[None, :]
 
     def __len__(self):
         return len(self.dicom_contour_fnames)
