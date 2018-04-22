@@ -8,5 +8,5 @@
 
 `final_data`: Under this directory you will find images directory which has **i_contour** and **o_contour** images under every patients own directory.
 
-`notebook`: This folder consists two notebooks that I've used. Notebook **development** is used to develop, debug and design. The other notebook, **solution-manual** shows how to use `solution` package to create Dataloaders just in few lines of code.
+`notebooks`: This folder consists two notebooks that I've used. Notebook **development** is used to develop, debug and design. The other notebook, **solution-manual** shows how to use `solution` package to create Dataloaders just in few lines of code.
 
