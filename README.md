@@ -1,6 +1,6 @@
-Welcome to I :heart: Learning Repo !
+## Welcome to I :heart: Learning Repo !
 
-This is an end-to-end pipeline for getting DICOM data ready for :heart: segmentation.
+#### This is an end-to-end pipeline for getting DICOM data ready for :heart: segmentation.
 
 `solution`: Main package including modules that are used in the pipeline.
 
